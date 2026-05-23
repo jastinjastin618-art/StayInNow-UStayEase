@@ -14,7 +14,7 @@ app.register_blueprint(api)
 @app.route("/")
 def index():
     return {
-        "message": "UStayEase Python Flask Backend is running",
+        "message": "StayInNow Python Flask Backend is running",
         "api": "/api/health"
     }
 

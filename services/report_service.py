@@ -15,7 +15,7 @@ class ReportService:
     def bookings_txt(self) -> str:
         rows = BookingRepository().all()
         lines = [
-            "LAPORAN BOOKING USTAYEASE",
+            "LAPORAN BOOKING STAYINOW",
             "=" * 50,
             ""
         ]
@@ -39,7 +39,7 @@ class ReportService:
         if not row:
             raise ValueError("Booking tidak ditemukan")
         return "\n".join([
-            "STRUK / BUKTI PEMESANAN USTAYEASE",
+            "STRUK / BUKTI PEMESANAN STAYINOW",
             "=" * 48,
             f"Booking ID       : #{row['id']}",
             f"Customer         : {row['customer_name']}",

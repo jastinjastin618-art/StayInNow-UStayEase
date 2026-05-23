@@ -70,10 +70,10 @@ def seed_db(conn):
     admin_hash = generate_password_hash("admin123")
     if IS_POSTGRES:
         cur.execute("INSERT INTO app_settings (key,value) VALUES (%s,%s) ON CONFLICT (key) DO NOTHING", ("system_maintenance", "off"))
-        cur.execute("INSERT INTO users (name,email,phone,password_hash,role) VALUES (%s,%s,%s,%s,%s) ON CONFLICT (email) DO NOTHING", ("Admin UStayEase", "admin@gmail.com.com", "", admin_hash, "admin"))
+        cur.execute("INSERT INTO users (name,email,phone,password_hash,role) VALUES (%s,%s,%s,%s,%s) ON CONFLICT (email) DO NOTHING", ("Admin S", "admin@gmail.com.com", "", admin_hash, "admin"))
     else:
         cur.execute("INSERT OR IGNORE INTO app_settings (key,value) VALUES (?,?)", ("system_maintenance", "off"))
-        cur.execute("INSERT OR IGNORE INTO users (name,email,phone,password_hash,role) VALUES (?,?,?,?,?)", ("Admin UStayEase", "admin@gmail.com", "", admin_hash, "admin"))
+        cur.execute("INSERT OR IGNORE INTO users (name,email,phone,password_hash,role) VALUES (?,?,?,?,?)", ("Admin STAYINOW", "admin@gmail.com", "", admin_hash, "admin"))
     cur.execute("SELECT COUNT(*) AS count FROM properties")
     count = cur.fetchone()["count"]
     if count:

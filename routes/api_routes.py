@@ -11,7 +11,7 @@ api = Blueprint("api", __name__, url_prefix="/api")
 
 @api.get("/health")
 def health():
-    return jsonify({"status": "ok", "app": "UStayEase Backend"})
+    return jsonify({"status": "ok", "app": "StayInNow Backend"})
 
 
 @api.get("/system/maintenance")
