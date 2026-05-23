@@ -1,4 +1,4 @@
-from database.db import get_connection
+from database.connection import get_connection
 
 class StatsRepository:
     def dashboard(self):

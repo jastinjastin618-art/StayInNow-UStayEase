@@ -1,4 +1,4 @@
-from database.db import get_connection, sql_placeholder
+from database.connection import get_connection, sql_placeholder
 
 class SystemRepository:
     KEY = "system_maintenance"

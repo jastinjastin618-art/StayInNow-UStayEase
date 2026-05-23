@@ -56,3 +56,26 @@ class ReportService:
             "=" * 48,
             "Terima kasih sudah melakukan pemesanan."
         ])
+
+    def receipt_csv(self, booking_id: int) -> str:
+        row = BookingRepository().find_detail(booking_id)
+        if not row:
+            raise ValueError("Booking tidak ditemukan")
+        output = io.StringIO()
+        writer = csv.writer(output)
+        # Header sesuai spesifikasi
+        writer.writerow(["Booking ID", "Nama Pelanggan", "Email", "Nomor HP", "Properti", "Check-in", "Check-out", "Jumlah Tamu", "Total Harga", "Status", "Metode Pembayaran"])
+        writer.writerow([
+            row.get('id'),
+            row.get('customer_name'),
+            row.get('customer_email'),
+            row.get('customer_phone'),
+            row.get('property_name'),
+            row.get('check_in'),
+            row.get('check_out'),
+            row.get('guests'),
+            row.get('total_price'),
+            row.get('payment_status') or row.get('status'),
+            row.get('payment_method') or '-'
+        ])
+        return output.getvalue()

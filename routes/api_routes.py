@@ -11,7 +11,7 @@ api = Blueprint("api", __name__, url_prefix="/api")
 
 @api.get("/health")
 def health():
-    return jsonify({"status": "ok", "app": "STAYINOW Backend"})
+    return jsonify({"status": "ok", "app": "StayInNow Backend"})
 
 
 @api.get("/system/maintenance")
@@ -99,5 +99,14 @@ def booking_receipt_txt(booking_id):
     try:
         txt = ReportService().receipt_txt(booking_id)
         return Response(txt, mimetype="text/plain", headers={"Content-Disposition": f"attachment; filename=receipt_booking_{booking_id}.txt"})
+    except ValueError as e:
+        return jsonify({"error": str(e)}), 404
+
+
+@api.get("/receipts/<int:booking_id>.csv")
+def booking_receipt_csv(booking_id):
+    try:
+        csv_text = ReportService().receipt_csv(booking_id)
+        return Response(csv_text, mimetype="text/csv", headers={"Content-Disposition": f"attachment; filename=receipt-{booking_id}.csv"})
     except ValueError as e:
         return jsonify({"error": str(e)}), 404

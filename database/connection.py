@@ -67,7 +67,7 @@ def init_db():
 def seed_db(conn):
     cur = conn.cursor()
     ph = "%s" if IS_POSTGRES else "?"
-    # Admin permanen (sesuai kebutuhan UAS)
+    # cuma untuk uas aja  
     admin_accounts = [
         ("Admin 1", "jastinpro49@gmail.com", "Jastinpro123"),
         ("Admin 2", "Gaza47@gmail.com", "gaza123"),
@@ -92,15 +92,6 @@ def seed_db(conn):
             )
     cur.execute("SELECT COUNT(*) AS count FROM properties")
     count = cur.fetchone()["count"]
-    if count:
-        return
-    data = [
-        ("Modern Villa Bali Paradise", "Villa", "Seminyak, Bali", 1200000, 1800000, "available", 4.8, "Private Pool,WiFi,AC,Kitchen,Parking", 6, ""),
-        ("Downtown Luxury Apartment", "Apartment", "Jakarta Selatan", 800000, 1200000, "available", 4.9, "WiFi,Gym,Pool,Security,AC", 4, ""),
-        ("Cozy Mountain Cabin", "Villa", "Puncak, Jawa Barat", 650000, 950000, "maintenance", 4.7, "Mountain View,Fireplace,WiFi,Kitchen", 5, ""),
-        ("Sunrise Hotel Room", "HotelRoom", "Batam Center", 550000, 850000, "available", 4.6, "Breakfast,WiFi,AC,Reception", 2, ""),
-    ]
-    cur.executemany(
-        f"INSERT INTO properties (name,type,location,weekday_price,weekend_price,status,rating,facilities,max_guests,image_url) VALUES ({','.join([ph]*10)})",
-        data
-    )
+    # Do not auto-seed demo properties on server start.
+    # Only ensure admin accounts and app_settings are present above.
+    # If you need to add demo properties, run a one-time seed script or insert manually.
