@@ -1,5 +1,5 @@
 from security import generate_password_hash, check_password_hash
-from database.connection import get_connection, sql_placeholder
+from database.db import get_connection, sql_placeholder
 
 class UserRepository:
     def find_by_email(self, email: str):

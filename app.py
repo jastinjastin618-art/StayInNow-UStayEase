@@ -1,6 +1,6 @@
 from flask import Flask
 from flask_cors import CORS
-from database.connection import init_db
+from database.db import init_db
 from routes.api_routes import api
 
 app = Flask(__name__)
@@ -14,7 +14,7 @@ app.register_blueprint(api)
 @app.route("/")
 def index():
     return {
-        "message": "StayInNow Python Flask Backend is running",
+        "message": "STAYINOW Python Flask Backend is running",
         "api": "/api/health"
     }
 

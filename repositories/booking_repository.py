@@ -1,4 +1,4 @@
-from database.connection import get_connection, rows_to_dicts, sql_placeholder
+from database.db import get_connection, rows_to_dicts, sql_placeholder
 
 class BookingRepository:
     def all(self):
