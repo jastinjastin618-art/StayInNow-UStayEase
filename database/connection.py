@@ -67,13 +67,29 @@ def init_db():
 def seed_db(conn):
     cur = conn.cursor()
     ph = "%s" if IS_POSTGRES else "?"
-    admin_hash = generate_password_hash("admin123")
+    # Admin permanen (sesuai kebutuhan UAS)
+    admin_accounts = [
+        ("Admin 1", "jastinpro49@gmail.com", "Jastinpro123"),
+        ("Admin 2", "Gaza47@gmail.com", "gaza123"),
+        ("Admin 3", "bhensen@gmail.com", "bhensen123"),
+    ]
+
     if IS_POSTGRES:
         cur.execute("INSERT INTO app_settings (key,value) VALUES (%s,%s) ON CONFLICT (key) DO NOTHING", ("system_maintenance", "off"))
-        cur.execute("INSERT INTO users (name,email,phone,password_hash,role) VALUES (%s,%s,%s,%s,%s) ON CONFLICT (email) DO NOTHING", ("Admin S", "admin@gmail.com.com", "", admin_hash, "admin"))
+        for name, email, password in admin_accounts:
+            admin_hash = generate_password_hash(password)
+            cur.execute(
+                "INSERT INTO users (name,email,phone,password_hash,role) VALUES (%s,%s,%s,%s,%s) ON CONFLICT (email) DO NOTHING",
+                (name, email, "", admin_hash, "admin"),
+            )
     else:
         cur.execute("INSERT OR IGNORE INTO app_settings (key,value) VALUES (?,?)", ("system_maintenance", "off"))
-        cur.execute("INSERT OR IGNORE INTO users (name,email,phone,password_hash,role) VALUES (?,?,?,?,?)", ("Admin STAYINOW", "admin@gmail.com", "", admin_hash, "admin"))
+        for name, email, password in admin_accounts:
+            admin_hash = generate_password_hash(password)
+            cur.execute(
+                "INSERT OR IGNORE INTO users (name,email,phone,password_hash,role) VALUES (?,?,?,?,?)",
+                (name, email, "", admin_hash, "admin"),
+            )
     cur.execute("SELECT COUNT(*) AS count FROM properties")
     count = cur.fetchone()["count"]
     if count:
