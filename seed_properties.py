@@ -1,7 +1,6 @@
 from database.connection import get_connection, sql_placeholder
 
 properties = [
-    # Villas
     {
         "name": "Nongsa Village Private Villa",
         "type": "Villa",
@@ -12,7 +11,7 @@ properties = [
         "rating": 4.8,
         "facilities": "Private Pool,WiFi,AC,Dapur,Parkir,Balkon,View Laut",
         "max_guests": 8,
-        "image_url": "https://images.unsplash.com/photo-1505691723518-36a6f1d1d3d6"
+        "image_url": "img/properties/Nongsa Village Private Villa.jpg"
     },
     {
         "name": "Montigo Style Seaview Villa Nongsa",
@@ -24,7 +23,7 @@ properties = [
         "rating": 4.9,
         "facilities": "Seaview,Private Pool,WiFi,AC,Kitchen,Parkir",
         "max_guests": 10,
-        "image_url": "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267"
+        "image_url": "img/properties/Montigo Style Seaview Villa Nongsa.jpg"
     },
     {
         "name": "Turi Beach Pool Villa",
@@ -36,9 +35,8 @@ properties = [
         "rating": 4.7,
         "facilities": "Pool,WiFi,AC,Kitchen,Parkir,View Laut",
         "max_guests": 6,
-        "image_url": "https://images.unsplash.com/photo-1505691723518-36a6f1d1d3d6"
+        "image_url": "img/properties/Turi Beach Pool Villa.jpg"
     },
-    # Apartments
     {
         "name": "Nuvasa Bay Sea View Apartment",
         "type": "Apartment",
@@ -61,7 +59,7 @@ properties = [
         "rating": 4.5,
         "facilities": "WiFi,AC,Gym,Parkir",
         "max_guests": 3,
-        "image_url": "https://images.unsplash.com/photo-1475855581690-80accde3ae2a"
+        "image_url": "img/properties/Nagoya Mansion City Apartment.jpg"
     },
     {
         "name": "Meisterstadt Batam Center Apartment",
@@ -75,7 +73,6 @@ properties = [
         "max_guests": 3,
         "image_url": "https://images.unsplash.com/photo-1494526585095-c41746248156"
     },
-    # HotelRooms
     {
         "name": "Aston Batam Deluxe Room",
         "type": "HotelRoom",
@@ -86,7 +83,7 @@ properties = [
         "rating": 4.3,
         "facilities": "WiFi,AC,Breakfast,Parkir",
         "max_guests": 2,
-        "image_url": "https://images.unsplash.com/photo-1501117716987-c8e2e10b38b9"
+        "image_url": "img/properties/Aston Batam Deluxe Room.jpg"
     },
     {
         "name": "HARRIS Batam Center Room",
@@ -98,7 +95,7 @@ properties = [
         "rating": 4.2,
         "facilities": "WiFi,AC,Breakfast,Parkir",
         "max_guests": 2,
-        "image_url": "https://images.unsplash.com/photo-1501117716987-c8e2e10b38b9"
+        "image_url": "img/properties/HARRIS Batam Center Room.jpg"
     },
     {
         "name": "Swiss-Belhotel Harbour Bay Room",
@@ -110,50 +107,38 @@ properties = [
         "rating": 4.5,
         "facilities": "WiFi,AC,Sea View,Breakfast,Parkir",
         "max_guests": 2,
-        "image_url": "https://images.unsplash.com/photo-1501117716987-c8e2e10b38b9"
+        "image_url": "img/properties/Swiss-Belhotel Harbour Bay Room.jpg"
     }
 ]
 
-
 def main():
-    ans = input("PERINGATAN: Script ini akan menghapus payments, bookings, dan properties lama. Lanjutkan? (y/n): ").strip().lower()
-    if ans not in ("y", "yes"):
-        print("Seed dibatalkan.")
-        return
-
     ph = sql_placeholder()
-    delete_counts = {}
+
     with get_connection() as conn:
         cur = conn.cursor()
-        # Delete dependent tables first
-        try:
-            cur.execute("DELETE FROM payments")
-            delete_counts['payments'] = cur.rowcount
-        except Exception:
-            delete_counts['payments'] = None
-        try:
-            cur.execute("DELETE FROM bookings")
-            delete_counts['bookings'] = cur.rowcount
-        except Exception:
-            delete_counts['bookings'] = None
-        try:
-            cur.execute("DELETE FROM properties")
-            delete_counts['properties_deleted'] = cur.rowcount
-        except Exception:
-            delete_counts['properties_deleted'] = None
 
-        # Insert new properties
-        stmt = f"INSERT INTO properties (name,type,location,weekday_price,weekend_price,status,rating,facilities,max_guests,image_url) VALUES ({','.join([ph]*10)})"
-        data = []
-        for p in properties:
-            data.append((p['name'], p['type'], p['location'], p['weekday_price'], p['weekend_price'], p['status'], p.get('rating', 4.5), p['facilities'], p['max_guests'], p.get('image_url', '')))
+        cur.execute("DELETE FROM payments")
+        cur.execute("DELETE FROM bookings")
+        cur.execute("DELETE FROM properties")
+
+        stmt = f"""
+        INSERT INTO properties
+        (name, type, location, weekday_price, weekend_price, status, rating, facilities, max_guests, image_url)
+        VALUES ({','.join([ph] * 10)})
+        """
+
+        data = [
+            (
+                p["name"], p["type"], p["location"], p["weekday_price"],
+                p["weekend_price"], p["status"], p["rating"],
+                p["facilities"], p["max_guests"], p["image_url"]
+            )
+            for p in properties
+        ]
+
         cur.executemany(stmt, data)
-        inserted = cur.rowcount if hasattr(cur, 'rowcount') else len(data)
 
-    print("Deleted counts:", delete_counts)
-    print(f"Inserted properties: {inserted}")
-    print("Seed properti Batam berhasil dibuat.")
+    print("Seed property berhasil diperbarui.")
 
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
